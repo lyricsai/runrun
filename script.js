@@ -1,13 +1,18 @@
-import {updateGround} from "./ground.js";
+import { setupGrass, updateGrass } from "./grass.js";
+import { getmanRect, setupMan, updateMan, setmanLose } from "./man.js";
+import { getCactusRects, setupCactus, updateCactus } from "./cactus.js";
 
-const worldElem = document.querySelector('[data-world');
+const worldElem = document.querySelector("[data-world]");
+const scoreElem = document.querySelector("[data-score]");
+const startElem = document.querySelector("[data-start]");
 
 const WORLD_WIDTH = 100;
 const WORLD_HEIGHT = 30;
+const SPEED_SCALE_INCREASE = 0.00001;
 
 const setPixelToWorldScale = () => {
     let worldToPixelScale;
-    if(window.innerWidth / window.innerHeight < WORLD_WIDTH / WORLD_HEIGHT) {
+    if (window.innerWidth / window.innerHeight < WORLD_WIDTH / WORLD_HEIGHT) {
         worldToPixelScale = window.innerWidth / WORLD_WIDTH;
     } else {
         worldToPixelScale = window.innerHeight / WORLD_HEIGHT;
@@ -17,9 +22,24 @@ const setPixelToWorldScale = () => {
 };
 
 let lastTime;
-const updateFrame = (time) => {
+let speedScale;
+let score;
 
-    if(!lastTime) {
+const handleLose = () => {
+    setmanLose();
+};
+
+const updateSpeedScale = (delta) => {
+    speedScale += delta * SPEED_SCALE_INCREASE;
+};
+
+const updateScore = (delta) => {
+    score += delta * 0.01;
+    scoreElem.innerText = parseInt(score);
+};
+
+const updateFrame = (time) => {
+    if (!lastTime) {
         lastTime = time;
         window.requestAnimationFrame(updateFrame);
         return;
@@ -27,12 +47,44 @@ const updateFrame = (time) => {
 
     const delta = time - lastTime;
 
-    updateGround(delta);
+    updateGrass(delta, speedScale);
+    updateMan(delta, speedScale);
+    updateCactus(delta, speedScale);
+    updateSpeedScale(delta);
+    updateScore(delta);
+    if (checkLose()) return handleLose();
 
     lastTime = time;
     window.requestAnimationFrame(updateFrame);
 };
 
+export const handleStart = (e) => {
+    lastTime = null;
+    speedScale = 1;
+    score = 0;
+
+    setupGrass();
+    setupMan();
+    setupCactus();
+    window.requestAnimationFrame(updateFrame);
+    startElem.classList.add("hide");
+};
+
+const isCollision = (rect1, rect2) => {
+    return (
+        rect1.left < rect2.right &&
+        rect1.top < rect2.bottom &&
+        rect1.right > rect2.left &&
+        rect1.bottom > rect2.top
+    );
+};
+
+const checkLose = () => {
+    const manRect = getmanRect();
+    return getCactusRects().some((rect) => isCollision(rect, manRect));
+};
+
 setPixelToWorldScale();
-window.addEventListener('resize', setPixelToWorldScale);
-window.requestAnimationFrame(updateFrame);
+
+window.addEventListener("resize", setPixelToWorldScale);
+document.addEventListener("keydown", handleStart, { once: true });

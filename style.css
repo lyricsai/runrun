@@ -37,20 +37,23 @@ body {
     display: none;
 }
 
-.ground {
+.grass {
     --left: 0;
     position: absolute;
     width: 300%;
     bottom: 0;
-    left: var(--left);
+    left: calc(var(--left) * 1%);
+    height: 15%;
 }
 
-.dino {
+.man {
     --bottom: 0;
+    --top: auto;
     position: absolute;
-    left: 1%;
+    left: 3%;
     height: 30%;
     bottom: calc(var(--bottom) * 1%);
+    top: calc(var(--top) * 1%);
 }
 
 .cactus {

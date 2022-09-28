@@ -1,5 +1,5 @@
 export const getCustomProperty = (elem, prop) => {
-    return getComputedStyle(elem).getPropertyValue(prop) || 0;
+    return parseFloat(getComputedStyle(elem).getPropertyValue(prop)) || 0;
 };
 
 export const setCustomProperty = (elem, prop, value) => {
