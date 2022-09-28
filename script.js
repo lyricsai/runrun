@@ -48,7 +48,7 @@ const updateFrame = (time) => {
     const delta = time - lastTime;
 
     updateGrass(delta, speedScale);
-    updateMan(delta, speedScale);
+    updateMan(delta, speedScale, time);
     updateCactus(delta, speedScale);
     updateSpeedScale(delta);
     updateScore(delta);

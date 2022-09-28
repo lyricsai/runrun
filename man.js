@@ -16,22 +16,28 @@ let manFrame;
 let currentFrameTime;
 let yVelocity;
 
-const handleRun = (delta, speedScale) => {
+const src = ["./images/run-0.png", "./images/run-1.png"];
+let selectedSrc;
+let lastTime;
+
+const handleRun = (speedScale, time) => {
     if (isJumping) {
         man.src = `./images/jump.png`;
         return;
     }
-
-    console.log(delta, speedScale, currentFrameTime, manFrame, MAN_FRAME_COUNT);
-    if (currentFrameTime <= FRAME_TIME) {
-        setTimeout(() => {
-            manFrame = (manFrame + 1) % MAN_FRAME_COUNT;
-            man.src = `./images/run-${manFrame}.png`;
-            currentFrameTime -= FRAME_TIME;
-        }, 500);
+    if (time - lastTime > 200 / speedScale) {
+        man.src = src[0];
+        if (selectedSrc === 0) {
+            console.log(0);
+            man.src = src[1];
+            selectedSrc = 1;
+        } else {
+            console.log(1);
+            man.src = src[0];
+            selectedSrc = 0;
+        }
+        lastTime = time;
     }
-
-    currentFrameTime += delta * speedScale;
 };
 const handleJump = (delta) => {
     if (!isJumping) return;
@@ -56,14 +62,16 @@ export const setupMan = () => {
     isJumping = false;
     manFrame = 0;
     currentFrameTime = 0;
+    selectedSrc = 0;
+    lastTime = 0;
     setCustomProperty(man, "--bottom", 0);
 
     document.removeEventListener("keydown", onJump);
     document.addEventListener("keydown", onJump);
 };
 
-export const updateMan = (delta, speedScale) => {
-    handleRun(delta, speedScale);
+export const updateMan = (delta, speedScale, time) => {
+    handleRun(speedScale, time);
     handleJump(delta);
 };
 

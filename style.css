@@ -11,11 +11,17 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    background: linear-gradient(
+        to left bottom,
+        rgb(0, 106, 255),
+        rgba(2, 206, 2, 0.363)
+    );
 }
 
 .world {
     overflow: hidden;
     position: relative;
+    background: linear-gradient(to left bottom, rgb(0, 106, 255), lightblue);
 }
 
 .score {
@@ -23,6 +29,8 @@ body {
     font-size: 3vmin;
     right: 1vmin;
     top: 1vmin;
+    font-family: "Courier New", Courier, monospace;
+    color: #fff;
 }
 
 .start__screen {
