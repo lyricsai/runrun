@@ -1,6 +1,6 @@
-import { setupGrass, updateGrass } from "./grass.js";
-import { getmanRect, setupMan, updateMan, setmanLose } from "./man.js";
-import { getCactusRects, setupCactus, updateCactus } from "./cactus.js";
+import {setupGrass, updateGrass} from "./grass.js";
+import {getmanRect, setupMan, updateMan, setmanLose} from "./man.js";
+import {getCactusRects, setupCactus, updateCactus} from "./cactus.js";
 
 const worldElem = document.querySelector("[data-world]");
 const scoreElem = document.querySelector("[data-score]");
@@ -12,7 +12,7 @@ const SPEED_SCALE_INCREASE = 0.00001;
 
 const setPixelToWorldScale = () => {
     let worldToPixelScale;
-    if (window.innerWidth / window.innerHeight < WORLD_WIDTH / WORLD_HEIGHT) {
+    if(window.innerWidth / window.innerHeight < WORLD_WIDTH / WORLD_HEIGHT) {
         worldToPixelScale = window.innerWidth / WORLD_WIDTH;
     } else {
         worldToPixelScale = window.innerHeight / WORLD_HEIGHT;
@@ -27,6 +27,7 @@ let score;
 
 const handleLose = () => {
     setmanLose();
+    alert(`Your score is ${parseInt(score)}`);
 };
 
 const updateSpeedScale = (delta) => {
@@ -39,7 +40,7 @@ const updateScore = (delta) => {
 };
 
 const updateFrame = (time) => {
-    if (!lastTime) {
+    if(!lastTime) {
         lastTime = time;
         window.requestAnimationFrame(updateFrame);
         return;
@@ -52,7 +53,7 @@ const updateFrame = (time) => {
     updateCactus(delta, speedScale);
     updateSpeedScale(delta);
     updateScore(delta);
-    if (checkLose()) return handleLose();
+    if(checkLose()) return handleLose();
 
     lastTime = time;
     window.requestAnimationFrame(updateFrame);
@@ -87,4 +88,4 @@ const checkLose = () => {
 setPixelToWorldScale();
 
 window.addEventListener("resize", setPixelToWorldScale);
-document.addEventListener("keydown", handleStart, { once: true });
+document.addEventListener("keydown", handleStart, {once: true});
